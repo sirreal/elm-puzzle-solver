@@ -1,7 +1,8 @@
 import StartApp.Simple exposing (start)
 import Html exposing (..)
 import Html.Attributes exposing (..)
-import Html.Events exposing (on)
+import Html.Events exposing (onClick)
+import Debug
 
 main = StartApp.Simple.start { model = initialModel, update = update, view = view }
 
@@ -19,7 +20,7 @@ type Action = Toggle Coordinate
 
 update : Action -> Model -> Model
 update action model = case action of
-    Toggle c -> toggleCoordinate c model
+    Toggle c -> Debug.log "" (toggleCoordinate c model)
 
 toggleCoordinate : Coordinate -> Model -> Model
 toggleCoordinate (x, y) model = List.take y model ++ toggleCol x (List.head (List.drop y model)) :: List.drop (y + 1) model
@@ -43,7 +44,7 @@ drawRows address l = case l of
 drawCb : Signal.Address Action -> Int -> (Int, Bool) -> Html
 drawCb address y (x, check) = input [ type' "checkbox"
                        , checked check
-                       , on "change" address (Toggle (x, y))
+                       , onClick address (Toggle (x, y))
                        ]
                        []
 
