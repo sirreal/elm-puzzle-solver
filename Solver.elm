@@ -21,12 +21,10 @@ initialModel = let empty = List.repeat 25 (List.repeat 25 False)
 
 -- Model is [ Rows... ]
 -- change to [ Cols... ]
-modelByCols : Model -> Model
-modelByCols m = case m of
-  [] -> []
-  _ -> if List.isEmpty (Maybe.withDefault [] ((List.head) m))
-          then []
-          else List.map (List.take 1) m ++ modelByCols (List.map (List.drop 1) m)
+modelByCols : List (List a) -> List (List a)
+modelByCols m = case List.head (Maybe.withDefault [] (List.head m)) of
+  Nothing -> []
+  _       -> List.foldr (++) [] (List.map (List.take 1) m) :: modelByCols (List.map (List.drop 1) m)
 
 initialCheckedBoxes : List Coordinate
 initialCheckedBoxes = [ (3, 3)
@@ -201,16 +199,16 @@ takeWhile : (a -> Bool) -> (List a) -> (List a)
 takeWhile predicate list =
   case list of
     []       -> []
-    hd :: tl -> if predicate hd
-                   then hd :: takeWhile predicate tl
-                   else []
+    x :: xs -> if predicate x
+                  then x :: takeWhile predicate xs
+                  else []
 
 dropWhile : (a -> Bool) -> (List a) -> (List a)
 dropWhile predicate list =
   case list of
     []       -> []
-    hd :: tl -> if predicate hd
-                   then dropWhile predicate tl
-                   else tl
+    x :: xs -> if predicate x
+                  then dropWhile predicate xs
+                  else list
 
 -- vi: set et shiftwidth=4 tabstop=4 softtabstop=4
