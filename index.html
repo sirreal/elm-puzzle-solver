@@ -10502,21 +10502,23 @@ Elm.Solver.make = function (_elm) {
    var Toggle = function (a) {    return {ctor: "Toggle",_0: a};};
    var drawCb = F3(function (address,y,_p23) {
       var _p24 = _p23;
-      var _p26 = _p24._0;
-      var _p25 = _p24._1;
-      var cb = A2($List.member,{ctor: "_Tuple2",_0: _p26,_1: y},initialCheckedBoxes) ? A2($Html.input,
-      _U.list([$Html$Attributes.type$("checkbox"),$Html$Attributes.checked(_p25),$Html$Attributes.disabled(true),A2($Html$Events.onClick,address,Noop)]),
-      _U.list([])) : A2($Html.input,
-      _U.list([$Html$Attributes.type$("checkbox"),$Html$Attributes.checked(_p25),A2($Html$Events.onClick,address,Toggle({ctor: "_Tuple2",_0: _p26,_1: y}))]),
+      var _p25 = _p24._0;
+      var bgColor = _p24._1 ? "black" : "white";
+      var action = A2($List.member,{ctor: "_Tuple2",_0: _p25,_1: y},initialCheckedBoxes) ? Noop : Toggle({ctor: "_Tuple2",_0: _p25,_1: y});
+      return A2($Html.td,
+      _U.list([A2($Html$Events.onClick,address,action)
+              ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "width",_1: "30px"}
+                                              ,{ctor: "_Tuple2",_0: "height",_1: "30px"}
+                                              ,{ctor: "_Tuple2",_0: "border",_1: "1px solid black"}
+                                              ,{ctor: "_Tuple2",_0: "background-color",_1: bgColor}]))]),
       _U.list([]));
-      return A2($Html.td,_U.list([]),_U.list([cb]));
    });
    var drawRow = F2(function (address,l) {
-      var _p27 = l;
-      if (_p27.ctor === "[]") {
+      var _p26 = l;
+      if (_p26.ctor === "[]") {
             return _U.list([]);
          } else {
-            var _p28 = _p27._0._2;
+            var _p27 = _p26._0._2;
             return A2($List._op["::"],
             A2($Html.tr,
             _U.list([]),
@@ -10525,9 +10527,9 @@ Elm.Solver.make = function (_elm) {
             $Html.span(_U.list([$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "display",_1: "inline-block"}
                                                                ,{ctor: "_Tuple2",_0: "padding",_1: ".3em"}]))])),
             _U.list([{ctor: "_Tuple2",_0: "textAlign",_1: "right"}]),
-            {ctor: "_Tuple2",_0: _p27._0._1,_1: _p28}),
-            A2($List.map,A2(drawCb,address,_p27._0._0),A2(zip,_U.range(0,$List.length(_p28)),_p28)))),
-            A2(drawRow,address,_p27._1));
+            {ctor: "_Tuple2",_0: _p26._0._1,_1: _p27}),
+            A2($List.map,A2(drawCb,address,_p26._0._0),A2(zip,_U.range(0,$List.length(_p27)),_p27)))),
+            A2(drawRow,address,_p26._1));
          }
    });
    var view = F2(function (address,model) {
