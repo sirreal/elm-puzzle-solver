@@ -162,20 +162,20 @@ rowGroups row = case row of
 
 drawCb : Signal.Address Action -> Int -> (Int, Bool) -> Html
 drawCb address y (x, check) =
-    let cb = if List.member (x, y) initialCheckedBoxes
-                then input [ type' "checkbox"
-                           , checked check
-                           , disabled True
-                           , onClick address Noop
-                           ]
-                           []
-
-                else input [ type' "checkbox"
-                           , checked check
-                           , onClick address (Toggle (x, y))
-                           ]
-                           []
-    in td [] [cb]
+    let action = if List.member (x, y) initialCheckedBoxes
+                then Noop
+                else Toggle (x, y)
+        bgColor = if check
+                   then "black"
+                   else "white"
+    in td [ onClick address action
+          , style [ ("width", "30px")
+                  , ("height", "30px")
+                  , ("border", "1px solid black")
+                  , ("background-color", bgColor)
+                  ]
+          ]
+          []
 
 
 zip : List a -> List b -> List (a, b)
