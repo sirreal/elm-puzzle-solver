@@ -8095,6 +8095,55 @@ Elm.Json.Decode.make = function (_elm) {
                                     ,andThen: andThen
                                     ,value: value
                                     ,customDecoder: customDecoder};
+};Elm.Set = Elm.Set || {};
+Elm.Set.make = function (_elm) {
+   "use strict";
+   _elm.Set = _elm.Set || {};
+   if (_elm.Set.values) return _elm.Set.values;
+   var _U = Elm.Native.Utils.make(_elm),$Basics = Elm.Basics.make(_elm),$Dict = Elm.Dict.make(_elm),$List = Elm.List.make(_elm);
+   var _op = {};
+   var foldr = F3(function (f,b,_p0) {    var _p1 = _p0;return A3($Dict.foldr,F3(function (k,_p2,b) {    return A2(f,k,b);}),b,_p1._0);});
+   var foldl = F3(function (f,b,_p3) {    var _p4 = _p3;return A3($Dict.foldl,F3(function (k,_p5,b) {    return A2(f,k,b);}),b,_p4._0);});
+   var toList = function (_p6) {    var _p7 = _p6;return $Dict.keys(_p7._0);};
+   var size = function (_p8) {    var _p9 = _p8;return $Dict.size(_p9._0);};
+   var member = F2(function (k,_p10) {    var _p11 = _p10;return A2($Dict.member,k,_p11._0);});
+   var isEmpty = function (_p12) {    var _p13 = _p12;return $Dict.isEmpty(_p13._0);};
+   var Set_elm_builtin = function (a) {    return {ctor: "Set_elm_builtin",_0: a};};
+   var empty = Set_elm_builtin($Dict.empty);
+   var singleton = function (k) {    return Set_elm_builtin(A2($Dict.singleton,k,{ctor: "_Tuple0"}));};
+   var insert = F2(function (k,_p14) {    var _p15 = _p14;return Set_elm_builtin(A3($Dict.insert,k,{ctor: "_Tuple0"},_p15._0));});
+   var fromList = function (xs) {    return A3($List.foldl,insert,empty,xs);};
+   var map = F2(function (f,s) {    return fromList(A2($List.map,f,toList(s)));});
+   var remove = F2(function (k,_p16) {    var _p17 = _p16;return Set_elm_builtin(A2($Dict.remove,k,_p17._0));});
+   var union = F2(function (_p19,_p18) {    var _p20 = _p19;var _p21 = _p18;return Set_elm_builtin(A2($Dict.union,_p20._0,_p21._0));});
+   var intersect = F2(function (_p23,_p22) {    var _p24 = _p23;var _p25 = _p22;return Set_elm_builtin(A2($Dict.intersect,_p24._0,_p25._0));});
+   var diff = F2(function (_p27,_p26) {    var _p28 = _p27;var _p29 = _p26;return Set_elm_builtin(A2($Dict.diff,_p28._0,_p29._0));});
+   var filter = F2(function (p,_p30) {    var _p31 = _p30;return Set_elm_builtin(A2($Dict.filter,F2(function (k,_p32) {    return p(k);}),_p31._0));});
+   var partition = F2(function (p,_p33) {
+      var _p34 = _p33;
+      var _p35 = A2($Dict.partition,F2(function (k,_p36) {    return p(k);}),_p34._0);
+      var p1 = _p35._0;
+      var p2 = _p35._1;
+      return {ctor: "_Tuple2",_0: Set_elm_builtin(p1),_1: Set_elm_builtin(p2)};
+   });
+   return _elm.Set.values = {_op: _op
+                            ,empty: empty
+                            ,singleton: singleton
+                            ,insert: insert
+                            ,remove: remove
+                            ,isEmpty: isEmpty
+                            ,member: member
+                            ,size: size
+                            ,foldl: foldl
+                            ,foldr: foldr
+                            ,map: map
+                            ,filter: filter
+                            ,partition: partition
+                            ,union: union
+                            ,intersect: intersect
+                            ,diff: diff
+                            ,toList: toList
+                            ,fromList: fromList};
 };(function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);var f=new Error("Cannot find module '"+o+"'");throw f.code="MODULE_NOT_FOUND",f}var l=n[o]={exports:{}};t[o][0].call(l.exports,function(e){var n=t[o][1][e];return s(n?n:e)},l,l.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 
 },{}],2:[function(require,module,exports){
@@ -10293,6 +10342,7 @@ Elm.Solver.make = function (_elm) {
    $List = Elm.List.make(_elm),
    $Maybe = Elm.Maybe.make(_elm),
    $Result = Elm.Result.make(_elm),
+   $Set = Elm.Set.make(_elm),
    $Signal = Elm.Signal.make(_elm),
    $StartApp$Simple = Elm.StartApp.Simple.make(_elm);
    var _op = {};
@@ -10407,7 +10457,7 @@ Elm.Solver.make = function (_elm) {
    var update = F2(function (action,model) {
       var _p21 = action;
       if (_p21.ctor === "Toggle") {
-            return A2($Debug.log,"",A2(toggleCoordinate,A2($Debug.watch,"Coordinate change",_p21._0),model));
+            return A2(toggleCoordinate,_p21._0,model);
          } else {
             return model;
          }
@@ -10462,28 +10512,28 @@ Elm.Solver.make = function (_elm) {
                         ,_U.list([1,3,1,4,3,3])
                         ,_U.list([1,1,2,2,2,6,1])
                         ,_U.list([7,1,3,2,1,1])]);
-   var initialCheckedBoxes = _U.list([{ctor: "_Tuple2",_0: 3,_1: 3}
-                                     ,{ctor: "_Tuple2",_0: 4,_1: 3}
-                                     ,{ctor: "_Tuple2",_0: 12,_1: 3}
-                                     ,{ctor: "_Tuple2",_0: 13,_1: 3}
-                                     ,{ctor: "_Tuple2",_0: 21,_1: 3}
-                                     ,{ctor: "_Tuple2",_0: 6,_1: 8}
-                                     ,{ctor: "_Tuple2",_0: 7,_1: 8}
-                                     ,{ctor: "_Tuple2",_0: 10,_1: 8}
-                                     ,{ctor: "_Tuple2",_0: 14,_1: 8}
-                                     ,{ctor: "_Tuple2",_0: 15,_1: 8}
-                                     ,{ctor: "_Tuple2",_0: 18,_1: 8}
-                                     ,{ctor: "_Tuple2",_0: 6,_1: 16}
-                                     ,{ctor: "_Tuple2",_0: 11,_1: 16}
-                                     ,{ctor: "_Tuple2",_0: 16,_1: 16}
-                                     ,{ctor: "_Tuple2",_0: 20,_1: 16}
-                                     ,{ctor: "_Tuple2",_0: 3,_1: 21}
-                                     ,{ctor: "_Tuple2",_0: 4,_1: 21}
-                                     ,{ctor: "_Tuple2",_0: 9,_1: 21}
-                                     ,{ctor: "_Tuple2",_0: 10,_1: 21}
-                                     ,{ctor: "_Tuple2",_0: 15,_1: 21}
-                                     ,{ctor: "_Tuple2",_0: 20,_1: 21}
-                                     ,{ctor: "_Tuple2",_0: 21,_1: 21}]);
+   var initialCheckedBoxes = $Set.fromList(_U.list([{ctor: "_Tuple2",_0: 3,_1: 3}
+                                                   ,{ctor: "_Tuple2",_0: 4,_1: 3}
+                                                   ,{ctor: "_Tuple2",_0: 12,_1: 3}
+                                                   ,{ctor: "_Tuple2",_0: 13,_1: 3}
+                                                   ,{ctor: "_Tuple2",_0: 21,_1: 3}
+                                                   ,{ctor: "_Tuple2",_0: 6,_1: 8}
+                                                   ,{ctor: "_Tuple2",_0: 7,_1: 8}
+                                                   ,{ctor: "_Tuple2",_0: 10,_1: 8}
+                                                   ,{ctor: "_Tuple2",_0: 14,_1: 8}
+                                                   ,{ctor: "_Tuple2",_0: 15,_1: 8}
+                                                   ,{ctor: "_Tuple2",_0: 18,_1: 8}
+                                                   ,{ctor: "_Tuple2",_0: 6,_1: 16}
+                                                   ,{ctor: "_Tuple2",_0: 11,_1: 16}
+                                                   ,{ctor: "_Tuple2",_0: 16,_1: 16}
+                                                   ,{ctor: "_Tuple2",_0: 20,_1: 16}
+                                                   ,{ctor: "_Tuple2",_0: 3,_1: 21}
+                                                   ,{ctor: "_Tuple2",_0: 4,_1: 21}
+                                                   ,{ctor: "_Tuple2",_0: 9,_1: 21}
+                                                   ,{ctor: "_Tuple2",_0: 10,_1: 21}
+                                                   ,{ctor: "_Tuple2",_0: 15,_1: 21}
+                                                   ,{ctor: "_Tuple2",_0: 20,_1: 21}
+                                                   ,{ctor: "_Tuple2",_0: 21,_1: 21}]));
    var modelByCols = function (m) {
       var _p22 = $List.head(A2($Maybe.withDefault,_U.list([]),$List.head(m)));
       if (_p22.ctor === "Nothing") {
@@ -10496,7 +10546,7 @@ Elm.Solver.make = function (_elm) {
    };
    var initialModel = function () {
       var empty = A2($List.repeat,25,A2($List.repeat,25,false));
-      return A3($List.foldr,toggleCoordinate,empty,initialCheckedBoxes);
+      return A3($Set.foldr,toggleCoordinate,empty,initialCheckedBoxes);
    }();
    var Noop = {ctor: "Noop"};
    var Toggle = function (a) {    return {ctor: "Toggle",_0: a};};
@@ -10504,12 +10554,14 @@ Elm.Solver.make = function (_elm) {
       var _p24 = _p23;
       var _p25 = _p24._0;
       var bgColor = _p24._1 ? "black" : "white";
-      var action = A2($List.member,{ctor: "_Tuple2",_0: _p25,_1: y},initialCheckedBoxes) ? Noop : Toggle({ctor: "_Tuple2",_0: _p25,_1: y});
+      var isMember = A2($Set.member,{ctor: "_Tuple2",_0: _p25,_1: y},initialCheckedBoxes);
+      var action = isMember ? Noop : Toggle({ctor: "_Tuple2",_0: _p25,_1: y});
+      var borderColor = isMember ? "darkgray" : "black";
       return A2($Html.td,
       _U.list([A2($Html$Events.onClick,address,action)
               ,$Html$Attributes.style(_U.list([{ctor: "_Tuple2",_0: "width",_1: "30px"}
                                               ,{ctor: "_Tuple2",_0: "height",_1: "30px"}
-                                              ,{ctor: "_Tuple2",_0: "border",_1: "1px solid black"}
+                                              ,{ctor: "_Tuple2",_0: "border",_1: A2($Basics._op["++"],"1px solid ",borderColor)}
                                               ,{ctor: "_Tuple2",_0: "background-color",_1: bgColor}]))]),
       _U.list([]));
    });
