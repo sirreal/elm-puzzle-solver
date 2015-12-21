@@ -138,7 +138,7 @@ view address model = let hintRow = tr [] (td [] [] :: List.map (drawHints (div [
 drawRow : Signal.Address Action -> List (Int, Hint, List Bool) -> List Html
 drawRow address l = case l of
     []                 -> []
-    (i, h, cs) :: rest -> tr [] (drawHints (span [style [("display", "inline-block"), ("padding", ".3em")]]) [("textAlign", "right")] (h, cs) :: List.map (drawCb address i) (zip [0..(List.length cs)] cs)) :: drawRow address rest
+    (i, h, cs) :: rest -> tr [] (drawHints (span [style [("display", "inline-block"), ("padding", ".3em")]]) [("white-space", "nowrap"), ("textAlign", "right")] (h, cs) :: List.map (drawCb address i) (zip [0..(List.length cs)] cs)) :: drawRow address rest
 
 
 drawHints : (List Html -> Html) -> List (String, String) -> (Hint, List Bool) -> Html
