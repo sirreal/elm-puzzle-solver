@@ -4,7 +4,6 @@ import StartApp.Simple exposing (start)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
-import Debug
 import Set
 
 type alias Model = List (List Bool)
@@ -117,7 +116,7 @@ hintsX =
 
 update : Action -> Model -> Model
 update action model = case action of
-    Toggle c -> Debug.log "" (toggleCoordinate (Debug.watch "Coordinate change" c) model)
+    Toggle c -> toggleCoordinate c model
     Noop     -> model
 
 toggleCoordinate : Coordinate -> Model -> Model
@@ -143,7 +142,6 @@ drawRow address l = case l of
 
 
 drawHints : (List Html -> Html) -> List (String, String) -> (Hint, List Bool) -> Html
--- drawHints el tdStyle (hs, checks) = td [style tdStyle] (List.map (drawHint el) (zipLongest (Debug.log "hints" hs) (Debug.log "groups" (rowGroups checks))))
 drawHints el tdStyle (hs, checks) = td [style tdStyle] (List.map (drawHint el) (zipLongest hs (rowGroups checks)))
 
 
