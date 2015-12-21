@@ -4,7 +4,7 @@ import StartApp.Simple exposing (start)
 import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
-import Set
+import Set as Set exposing ( Set, fromList, foldr, member )
 
 type alias Model = List (List Bool)
 type alias Coordinate = (Int, Int)
