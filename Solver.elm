@@ -5,6 +5,7 @@ import Html exposing (..)
 import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Debug
+import Set
 
 type alias Model = List (List Bool)
 type alias Coordinate = (Int, Int)
@@ -17,7 +18,7 @@ main = StartApp.Simple.start { model = initialModel, update = update, view = vie
 
 initialModel : Model
 initialModel = let empty = List.repeat 25 (List.repeat 25 False)
-               in  List.foldr toggleCoordinate empty initialCheckedBoxes
+               in  Set.foldr toggleCoordinate empty initialCheckedBoxes
 
 -- Model is [ Rows... ]
 -- change to [ Cols... ]
@@ -26,33 +27,34 @@ modelByCols m = case List.head (Maybe.withDefault [] (List.head m)) of
   Nothing -> []
   _       -> List.foldr (++) [] (List.map (List.take 1) m) :: modelByCols (List.map (List.drop 1) m)
 
-initialCheckedBoxes : List Coordinate
-initialCheckedBoxes = [ (3, 3)
-                      , (4, 3)
-                      , (12, 3)
-                      , (13, 3)
-                      , (21, 3)
+initialCheckedBoxes : Set.Set Coordinate
+initialCheckedBoxes = Set.fromList
+  [ (3, 3)
+  , (4, 3)
+  , (12, 3)
+  , (13, 3)
+  , (21, 3)
 
-                      , (6, 8)
-                      , (7, 8)
-                      , (10, 8)
-                      , (14, 8)
-                      , (15, 8)
-                      , (18, 8)
+  , (6, 8)
+  , (7, 8)
+  , (10, 8)
+  , (14, 8)
+  , (15, 8)
+  , (18, 8)
 
-                      , (6, 16)
-                      , (11, 16)
-                      , (16, 16)
-                      , (20, 16)
+  , (6, 16)
+  , (11, 16)
+  , (16, 16)
+  , (20, 16)
 
-                      , (3, 21)
-                      , (4, 21)
-                      , (9, 21)
-                      , (10, 21)
-                      , (15, 21)
-                      , (20, 21)
-                      , (21, 21)
-                      ]
+  , (3, 21)
+  , (4, 21)
+  , (9, 21)
+  , (10, 21)
+  , (15, 21)
+  , (20, 21)
+  , (21, 21)
+  ]
 
 hintsY : List Hint
 hintsY =
@@ -162,16 +164,20 @@ rowGroups row = case row of
 
 drawCb : Signal.Address Action -> Int -> (Int, Bool) -> Html
 drawCb address y (x, check) =
-    let action = if List.member (x, y) initialCheckedBoxes
-                then Noop
-                else Toggle (x, y)
+    let isMember = Set.member (x, y) initialCheckedBoxes
+        action = if isMember
+                    then Noop
+                    else Toggle (x, y)
+        borderColor = if isMember
+                         then "darkgray"
+                         else "black"
         bgColor = if check
-                   then "black"
-                   else "white"
+                     then "black"
+                     else "white"
     in td [ onClick address action
           , style [ ("width", "30px")
                   , ("height", "30px")
-                  , ("border", "1px solid black")
+                  , ("border", "1px solid " ++ borderColor)
                   , ("background-color", bgColor)
                   ]
           ]
@@ -181,24 +187,24 @@ drawCb address y (x, check) =
 zip : List a -> List b -> List (a, b)
 zip xs ys = case (xs, ys) of
     (x :: xs', y :: ys') -> (x, y) :: zip xs' ys'
-    _ -> []
+    _                    -> []
 
 zip3 : List a -> List b -> List c -> List (a, b, c)
 zip3 xs ys zs = case (xs, ys, zs) of
     (x :: xs', y :: ys', z :: zs') -> (x, y, z) :: zip3 xs' ys' zs'
-    _ -> []
+    _                              -> []
 
 zipLongest : List a -> List b -> List (a, Maybe b)
 zipLongest xs ys = case (xs, ys) of
     (x :: xs', y :: ys') -> (x, Just y) :: zipLongest xs' ys'
-    (x :: xs', []) -> (x, Nothing) :: zipLongest xs' []
-    _ -> []
+    (x :: xs', [])       -> (x, Nothing) :: zipLongest xs' []
+    _                    -> []
 
 
 takeWhile : (a -> Bool) -> (List a) -> (List a)
 takeWhile predicate list =
   case list of
-    []       -> []
+    []      -> []
     x :: xs -> if predicate x
                   then x :: takeWhile predicate xs
                   else []
@@ -206,7 +212,7 @@ takeWhile predicate list =
 dropWhile : (a -> Bool) -> (List a) -> (List a)
 dropWhile predicate list =
   case list of
-    []       -> []
+    []      -> []
     x :: xs -> if predicate x
                   then dropWhile predicate xs
                   else list
